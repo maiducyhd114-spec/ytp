@@ -1,28 +1,26 @@
-cat > server.py <<'PY'
-#!/usr/bin/env python3
-from flask import Flask, redirect, jsonify
-import os
+from flask import Flask, redirect
 
 app = Flask(__name__)
 
-# SĐT -> link YouTube (đổi URL nếu muốn video cụ thể)
-KEYS = {
-    "0388486866": "https://m.youtube.com",
-    # "0962490333": "https://m.youtube.com/watch?v=VIDEO_ID",
+# Danh sách key hợp lệ (ở đây ví dụ là số điện thoại)
+KEY_MAP = {
+    "0388486866": "https://www.youtube.com/",
+    "0987654321": "https://www.youtube.com/",
+    "0909999999": "https://www.youtube.com/"
 }
 
 @app.route("/")
 def home():
-    return "✅ Server OK. Dùng: /<sdt>  (VD: /0388486866)"
+    return "✅ Server chạy OK - nhập số điện thoại vào URL để test."
 
-@app.route("/<sdt>")
-def open_by_phone(sdt: str):
-    url = KEYS.get(sdt)
-    if not url:
-        return jsonify(ok=False, reason="invalid_phone"), 404
-    return redirect(url, code=302)
+@app.route("/<key>")
+def open_key(key):
+    # Nếu key tồn tại trong KEY_MAP thì redirect
+    if key in KEY_MAP:
+        return redirect(KEY_MAP[key])
+    return "❌ Key không hợp lệ!"
 
 if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-PY
