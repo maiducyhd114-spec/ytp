@@ -9,7 +9,10 @@ def home():
 
 # Map số điện thoại (key) sang link YouTube
 phone_map = {
-    "0388486866": "https://www.youtube.com/"
+    "0388486866": "https://www.youtube.com/",
+    "0912345678": "https://www.youtube.com/",
+    "0987654321": "https://www.youtube.com/",
+    "0977123456": "https://www.youtube.com/"
 }
 
 @app.route("/<phone>")
