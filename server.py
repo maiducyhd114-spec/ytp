@@ -1,25 +1,24 @@
-from flask import Flask, redirect, jsonify
-import os
+from flask import Flask, redirect
 
 app = Flask(__name__)
 
-# SĐT -> URL cần mở
-KEYS = {
-    "0388486866": "https://www.youtube.com/",
-    # thêm số khác ở đây nếu muốn
+# Trang chủ để test nhanh
+@app.route("/")
+def home():
+    return "✅ Server chạy OK - nhập số điện thoại vào URL để test."
+
+# Map số điện thoại (key) sang link YouTube
+phone_map = {
+    "0388486866": "https://www.youtube.com/"
 }
 
-@app.route("/")            # Trang chủ test nhanh
-def home():
-    return "✅ Server OK. Dùng: /<sdt>  (ví dụ: /0388486866)"
-
-@app.route("/<sdt>")       # Nhập trực tiếp số điện thoại
-def open_phone(sdt: str):
-    url = KEYS.get(sdt)
-    if not url:
-        return jsonify(ok=False, reason="invalid_phone"), 404
-    return redirect(url, code=302)
+@app.route("/<phone>")
+def open_link(phone):
+    if phone in phone_map:
+        return redirect(phone_map[phone])
+    return "❌ Key không hợp lệ!"
 
 if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
